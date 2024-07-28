@@ -21,8 +21,18 @@ class MyForegroundService : Service() {
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
-        startForegroundService()
+
     }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        startForegroundServic()
+        return START_STICKY
+    }
+
+    override fun onBind(intent: Intent?): IBinder? {
+        return null
+    }
+
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -36,7 +46,7 @@ class MyForegroundService : Service() {
         }
     }
 
-    private fun startForegroundService() {
+    private fun startForegroundServic() {
         val notification = createCustomNotification()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             startForeground(
@@ -67,33 +77,27 @@ class MyForegroundService : Service() {
             action = "button1_action"
         }
         val button1PendingIntent =
-            PendingIntent.getBroadcast(this, 1, button1Intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            PendingIntent.getBroadcast(this, 1, button1Intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
         val button2Intent = Intent(this, ButtonReceiver::class.java).apply {
             action = "button2_action"
         }
         val button2PendingIntent =
-            PendingIntent.getBroadcast(this, 2, button2Intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            PendingIntent.getBroadcast(this, 2, button2Intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
         customLayout.setOnClickPendingIntent(R.id.button1, button1PendingIntent)
         customLayout.setOnClickPendingIntent(R.id.button2, button2PendingIntent)
 
 
         return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.notification) // Ensure this icon exists
+            .setSmallIcon(R.drawable.notification)
             .setContentIntent(pendingIntent)
-            .setCustomContentView(customLayout)
+            .setContent(customLayout)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
             .build()
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        return START_NOT_STICKY
-    }
-
-    override fun onBind(intent: Intent?): IBinder? {
-        return null
-    }
 
     companion object {
         const val CHANNEL_ID = "ForegroundServiceChannel"

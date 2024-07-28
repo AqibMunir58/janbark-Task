@@ -23,7 +23,7 @@ class ImageRepository(private val context: Context) {
     }
 
     private fun getImagesFromFileSystem(): List<String> {
-        val directory = File(context.getExternalFilesDir(null)?.parent, "Screenshots")
+        val directory = File(context.getExternalFilesDir(null)?.parent, "MyAppScreenshots")
         val imagePaths = mutableListOf<String>()
         if (directory.exists()) {
             directory.listFiles()?.forEach { file ->
@@ -43,7 +43,7 @@ class ImageRepository(private val context: Context) {
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             projection,
             "${MediaStore.Images.Media.RELATIVE_PATH} LIKE ?",
-            arrayOf("DCIM/Screenshots%"),
+            arrayOf("DCIM/MyAppScreenshots%"),
             MediaStore.Images.Media.DATE_ADDED + " DESC"
         )
         cursor?.use {

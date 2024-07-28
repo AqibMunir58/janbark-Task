@@ -170,7 +170,7 @@ class ScreenCaptureService : Service() {
     }
 
     private fun saveBitmapToFileBelowQ(bitmap: Bitmap) {
-        val directory = File(Environment.getExternalStorageDirectory().toString() + "/Screenshots")
+        val directory = File(Environment.getExternalStorageDirectory().toString() + "/MyAppScreenshots")
         if (!directory.exists()) {
             directory.mkdirs()
         }
@@ -201,7 +201,7 @@ class ScreenCaptureService : Service() {
                 "screenshot_${SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())}.png"
             )
             put(android.provider.MediaStore.MediaColumns.MIME_TYPE, "image/png")
-            put(android.provider.MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/Screenshots")
+            put(android.provider.MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/MyAppScreenshots")
         }
 
         val contentResolver = applicationContext.contentResolver

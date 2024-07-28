@@ -84,37 +84,48 @@ class HomeActivity : AppCompatActivity() {
         }
         imageViewModel.fetchImages()
         imageViewModel.imagePaths.observe(this, Observer {
-             adapter = ImageAdapter(this , this,it, object : ImageAdapter.onItemClick {
-                override fun onDelete(position: Int, item: String) {
-                    imageViewModel.deleteImage(item)
-                   val  imagePaths = it.filterIndexed { index, _ -> index != position }
-                    adapter.updateImagePaths(imagePaths)
-                }
+            if (it.size > 0)
+            {
+                adapter = ImageAdapter(this , this,it, object : ImageAdapter.onItemClick {
+                    override fun onDelete(position: Int, item: String) {
+                        imageViewModel.deleteImage(item)
+                        val  imagePaths = it.filterIndexed { index, _ -> index != position }
+                        adapter.updateImagePaths(imagePaths)
+                    }
 
-                override fun onShare(item: String) {
-                    shareImage(item)
-                }
+                    override fun onShare(item: String) {
+                        shareImage(item)
+                    }
 
-                override fun onOpen(item: String) {
-                    InterstitialAdHelper.showAd(
-                        this@HomeActivity,
-                        this@HomeActivity,
-                        object : InterstitialAdHelper.InterstitialCallBack {
-                            override fun onAdDismissed() {
-                                goToNext(item)
-                            }
+                    override fun onOpen(item: String) {
+                        InterstitialAdHelper.showAd(
+                            this@HomeActivity,
+                            this@HomeActivity,
+                            object : InterstitialAdHelper.InterstitialCallBack {
+                                override fun onAdDismissed() {
+                                    goToNext(item)
+                                }
 
-                            override fun onAdNull() {
-                                goToNext(item)
-                            }
+                                override fun onAdNull() {
+                                    goToNext(item)
+                                }
 
-                        })
+                            })
 
-                }
+                    }
 
-            })
+                })
 
-            binding.recyclerView.adapter = adapter
+                binding.recyclerView.adapter = adapter
+                binding.noImages.visibility = View.GONE
+                binding.recyclerView.visibility = View.VISIBLE
+            }
+            else
+            {
+                binding.noImages.visibility = View.VISIBLE
+                binding.recyclerView.visibility = View.GONE
+            }
+
         })
 
 
